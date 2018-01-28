@@ -19,7 +19,7 @@ AnnotatingFromHitlist <- function(Hitlist, PatternList){
   df_lines <- PatternA %>% 
     separate_rows(stg4_6, sep = '\\|') %>% 
     separate(stg4_6, c('Pattern', 'LevelofExp'), sep = ';', convert = TRUE)
-  clean.list.df   <- df_lines %>% group_by(VTID) %>% top_n(1, value)
+  clean.list.df   <- df_lines %>% group_by(VTID) %>% top_n(1, LevelofExp)
   colnames(clean.list.df)[2] <- "seqnames"
   colnames(clean.list.df)[4] <- "sToP"
   GRanges.Patterns <<- GRanges(clean.list.df)
