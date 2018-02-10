@@ -4,7 +4,7 @@ AnnotatingFromHitlist <- function(Hitlist, PatternList){
   #create Granges Object with DmelCoordinates
   a <- separate(Hits, genome_pos_mel, into = c("seqnames", "Start", "Stop"))
   a.df <- data.frame(seqnames = a$seqnames, sTarT = a$Start, sToP = a$Stop)
-  GrangesObject <<- makeGRangesFromDataFrame(a.df)
+  GrangesObject <<- makeGRangesFromDataFrame(a.df, starts.in.df.are.0based=FALSE)
   ## Add Coordinates For other species as MetadataColumn
   mcols(GrangesObject)$yakCoord <<- Hits$genome_pos_yak
   mcols(GrangesObject)$pseCoord <<- Hits$genome_pos_pse
@@ -22,6 +22,6 @@ AnnotatingFromHitlist <- function(Hitlist, PatternList){
   clean.list.df   <- df_lines %>% group_by(VTID) %>% top_n(1, LevelofExp)
   colnames(clean.list.df)[2] <- "seqnames"
   colnames(clean.list.df)[4] <- "sToP"
-  GRanges.Patterns <<- GRanges(clean.list.df)
+  GRanges.Patterns <<- GRanges(clean.list.df, starts.in.df.are.0based=FALSE)
   GRanges.Patterns
 }
