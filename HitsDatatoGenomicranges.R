@@ -3,7 +3,7 @@ AnnotatingFromHitlist <- function(Hitlist, PatternList){
   Hits <- read.csv(Hitlist, header=T, sep ="\t")
   #create Granges Object with DmelCoordinates
   a <- separate(Hits, genome_pos_mel, into = c("seqnames", "Start", "Stop"))
-  a.df <- as.data.frame(seqnames = a$seqnames, sTarT = a$Start, sToP = a$Stop)
+  a.df <- data.frame(seqnames = a$seqnames, sTarT = a$Start, sToP = a$Stop)
   GrangesObject <<- makeGRangesFromDataFrame(a.df)
   ## Add Coordinates For other species as MetadataColumn
   mcols(GrangesObject)$yakCoord <<- Hits$genome_pos_yak
