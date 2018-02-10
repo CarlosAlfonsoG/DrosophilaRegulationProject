@@ -11,16 +11,20 @@ GrangesOverlapsWithMetadata <- function(Gr1, Gr2, GeneName){
           AnnotatedGrangesWithPattern <<- ranges
           AnnotatedGrangesWithPattern
           #CleanData and generate Duplicate Rows for pattern
-          AnnotatedGrangesWithPattern.df <- as.data.frame(AnnotatedGrangesWithPattern)
-          AnnotatedGrangesWithPattern.df$Pattern <- as.character(AnnotatedGrangesWithPattern.df$Pattern)
-          AnnotatedGrangesWithPattern.df$Pattern <- gsub("\\(", "", AnnotatedGrangesWithPattern.df$Pattern)
-          AnnotatedGrangesWithPattern.df$Pattern <- gsub("\\)", "", AnnotatedGrangesWithPattern.df$Pattern)
-          AnnotatedGrangesWithPattern.df$Pattern <- gsub('"', "", AnnotatedGrangesWithPattern.df$Pattern)
-          AnnotatedGrangesWithPattern.df$Pattern <- gsub("^c", "", AnnotatedGrangesWithPattern.df$Pattern)
-          AnnotatedGrangesWithPattern.df$ID <- seq.int(nrow(AnnotatedGrangesWithPattern.df))
-          s <- strsplit(df$V2, split = ",")
+          AnnotatedGrangesWithPattern.df <<- as.data.frame(AnnotatedGrangesWithPattern)
+          AnnotatedGrangesWithPattern.df$Pattern <<- as.character(AnnotatedGrangesWithPattern.df$Pattern)
+          AnnotatedGrangesWithPattern.df$Pattern <<- gsub("\\(", "", AnnotatedGrangesWithPattern.df$Pattern)
+          AnnotatedGrangesWithPattern.df$Pattern <<- gsub("\\)", "", AnnotatedGrangesWithPattern.df$Pattern)
+          AnnotatedGrangesWithPattern.df$Pattern <<- gsub('"', "", AnnotatedGrangesWithPattern.df$Pattern)
+          AnnotatedGrangesWithPattern.df$Pattern <<- gsub("^c", "", AnnotatedGrangesWithPattern.df$Pattern)
+          AnnotatedGrangesWithPattern.df$ID <<- seq.int(nrow(AnnotatedGrangesWithPattern.df))
+          df <- AnnotatedGrangesWithPattern.df
+          s <- strsplit(df$Pattern, split = ",")
           e <- data.frame(ID = rep(A1, sapply(s, length)), Pattern = unlist(s))
+          colnames(e)[1] <- "ID"
           f <- merge(A1, e[, c("ID", "Pattern")], by="ID", all.y = T)
+          f$ReporterIntensity <- as.character(f$ReporterIntensity)
+          f$ReporterIntensity <- stri_extract_first_regex(f$ReporterIntensity, "[0-9]")
           
           ##MakeGrangesToBed by Devon Ryan Biostars: https://www.biostars.org/p/89341/
           write.table(AnnotatedGrangesWithPattern, file=paste0(GeneName, "AnnotatedGrangesWithPattern.bed"), quote=F, sep="\t", row.names=F, col.names=F)
