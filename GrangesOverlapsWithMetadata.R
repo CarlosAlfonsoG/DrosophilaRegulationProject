@@ -1,7 +1,7 @@
 ###FindOverlapsinGenomicRangesKeepingmetadata##
 ## Cite: answerd by Valerie Obenchain Bioconductor: https://support.bioconductor.org/p/54470/
 GrangesOverlapsWithMetadata <- function(Gr1, Gr2, GeneName){
-          require(GenomicRanges); require(gsubfn)
+          require(GenomicRanges); require(gsubfn); require(stringi)
           ranges <-subsetByOverlaps(Gr1, Gr2)
           hits <- findOverlaps(Gr1, Gr2)
           Pattern <- CharacterList(split(Gr2$Pattern[subjectHits(hits)], queryHits(hits)))
@@ -20,11 +20,11 @@ GrangesOverlapsWithMetadata <- function(Gr1, Gr2, GeneName){
           AnnotatedGrangesWithPattern.df$ID <<- seq.int(nrow(AnnotatedGrangesWithPattern.df))
           df <- AnnotatedGrangesWithPattern.df
           s <- strsplit(df$Pattern, split = ",")
-          e <- data.frame(ID = rep(A1, sapply(s, length)), Pattern = unlist(s))
+          e <- data.frame(ID = rep(df$ID, sapply(s, length)), Pattern = unlist(s))
           colnames(e)[1] <- "ID"
-          f <- merge(A1, e[, c("ID", "Pattern")], by="ID", all.y = T)
+          f <- merge(df, e, by="ID", all.y = T)
           f$ReporterIntensity <- as.character(f$ReporterIntensity)
-          f$ReporterIntensity <- stri_extract_first_regex(f$ReporterIntensity, "[0-9]")
+          f$ReporterIntensity <<- stri_extract_first_regex(f$ReporterIntensity, "[0-9]")
           
           ##MakeGrangesToBed by Devon Ryan Biostars: https://www.biostars.org/p/89341/
           write.table(AnnotatedGrangesWithPattern, file=paste0(GeneName, "AnnotatedGrangesWithPattern.bed"), quote=F, sep="\t", row.names=F, col.names=F)
