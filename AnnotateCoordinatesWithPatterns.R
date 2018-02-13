@@ -1,3 +1,8 @@
+###Function to take EisenLab Metadata and annotated with reported patterns from StarkLab enhancers ### 
+### Further work has to be made to this function works with all kind of BED files ### 
+## Feb 13, 2018 
+
+
 AnnotateGrangesWithPatternMetada <- function(Hitlist, PatternList, GeneName){
   options(verbose = F)
   require(GenomicRanges); require(tidyverse);require(GenomicRanges); require(gsubfn):require(stringi)
