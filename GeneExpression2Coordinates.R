@@ -17,7 +17,7 @@ GeneExpression2Coordinates <- function(BED, GeneExpresion, GeneName){
     colnames(data.frame)[12] <- "ID"
     Norm_RNAseq <- read.csv("/Users/carlosalfonso/Projects/EnhancerDivergence/Data/Tables/csv/Norm_Gene_exp_all_species.csv", sep = ",", header = T)
     colnames(Norm_RNAseq)[1] <- "ID"
-    merge(x = data.frame, y = Norm_RNAseq, by = "ID", all = TRUE)
+    merge(x = data.frame, y = Norm_RNAseq, by = "ID", all.x = TRUE)
     Ectoderm <- data.frame[grep("ecto", data.frame$Pattern), ]
     Endoderm <- data.frame[grep("endo", data.frame$Pattern), ]
     Mesoderm <- data.frame[grep("meso", data.frame$Pattern), ]
