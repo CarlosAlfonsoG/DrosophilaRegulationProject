@@ -1,6 +1,5 @@
 ###This function works specifically with EisenMetadata and GRangesObjects To annotate them with nearby genes using ChipSeeker ## 
 ## Need upgrade for the following things, be more generalized for other usages, GeneExpression value is useless, create a directory and be able to run with several BED files at a time ##
-
 GeneExpression2Coordinates <- function(BED, GeneExpresion, GeneName){
     require(GenomicRanges):require(ChIPseeker):require(GenomicFeatures)
     data <- read.table(BED,header=F)
@@ -11,13 +10,16 @@ GeneExpression2Coordinates <- function(BED, GeneExpresion, GeneName){
     mcols(GRangesChipSeeker)$Dvir <- data$Dvir
     mcols(GRangesChipSeeker)$PatternExp <- data$PatternInt
     mcols(GRangesChipSeeker)$Pattern <- data$Pattern
-    dm3 <- makeTxDbFromUCSC(genome = "dm3", tablename ="ensGene")
+    if(  !exists("dm3") ) {
+      dm3 <- makeTxDbFromUCSC(genome = "dm3", tablename ="ensGene")
+    }
     peakAnnot <- annotatePeak(GRangesChipSeeker, tssRegion=c(-3000, 3000), TxDb=dm3)
-    data.frame <- as.data.frame(peakAnnot)
-    colnames(data.frame)[12] <- "ID"
+    data.frame <<- as.data.frame(peakAnnot)
+    colnames(data.frame)[17] <- "Gene"
+    data.frame$annotation <- gsub(",","",data.frame$annotation)
     Norm_RNAseq <- read.csv("/Users/carlosalfonso/Projects/EnhancerDivergence/Data/Tables/csv/Norm_Gene_exp_all_species.csv", sep = ",", header = T)
-    colnames(Norm_RNAseq)[1] <- "ID"
-    merge(x = data.frame, y = Norm_RNAseq, by = "ID", all.x = TRUE)
+    colnames(Norm_RNAseq)[1] <- "Gene"
+    data.frame  <- merge(x = data.frame, y = Norm_RNAseq, by = "Gene", all.x = TRUE)
     Ectoderm <- data.frame[grep("ecto", data.frame$Pattern), ]
     Endoderm <- data.frame[grep("endo", data.frame$Pattern), ]
     Mesoderm <- data.frame[grep("meso", data.frame$Pattern), ]
@@ -31,3 +33,4 @@ GeneExpression2Coordinates <- function(BED, GeneExpresion, GeneName){
     write.table(Ubiquitous, file=paste0(GeneName, "_UbiquitousGenes.csv"), quote=F, sep=",", row.names=F, col.names=T)
 
 }
+
