@@ -1,3 +1,6 @@
+###This function works specifically with EisenMetadata and GRangesObjects To annotate them with nearby genes using ChipSeeker ## 
+## Need upgrade for the following things, be more generalized for other usages, GeneExpression value is useless, create a directory and be able to run with several BED files at a time ##
+
 GeneExpression2Coordinates <- function(BED, GeneExpresion, GeneName){
     require(GenomicRanges):require(ChIPseeker):require(GenomicFeatures)
     data <- read.table(BED,header=F)
